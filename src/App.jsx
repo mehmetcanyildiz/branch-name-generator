@@ -7,6 +7,24 @@ const BRANCH_TYPES = [
   { id: 'hotfix', name: 'Hotfix' },
 ]
 
+const turkishToEnglish = (text) => {
+  const charMap = {
+    'ç': 'c',
+    'Ç': 'C',
+    'ğ': 'g',
+    'Ğ': 'G',
+    'ı': 'i',
+    'İ': 'I',
+    'ö': 'o',
+    'Ö': 'O',
+    'ş': 's',
+    'Ş': 'S',
+    'ü': 'u',
+    'Ü': 'U',
+  }
+  return text.replace(/[çÇğĞıİöÖşŞüÜ]/g, match => charMap[match] || match)
+}
+
 function App() {
   const [jiraLink, setJiraLink] = useState('')
   const [branchType, setBranchType] = useState('feature')
@@ -22,7 +40,7 @@ function App() {
     const jiraId = extractJiraId(jiraLink)
     if (!jiraId) return ''
     
-    const namePart = extraName
+    const namePart = turkishToEnglish(extraName)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
@@ -63,7 +81,7 @@ function App() {
               value={jiraLink}
               onChange={(e) => setJiraLink(e.target.value)}
               placeholder="https://jira.com/PROJ-123"
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 outline-none"
             />
           </div>
 
@@ -75,7 +93,7 @@ function App() {
               id="branch-type"
               value={branchType}
               onChange={(e) => setBranchType(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white outline-none"
             >
               {BRANCH_TYPES.map((type) => (
                 <option key={type.id} value={type.id}>
@@ -94,8 +112,8 @@ function App() {
               type="text"
               value={extraName}
               onChange={(e) => setExtraName(e.target.value)}
-              placeholder="Brief description"
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400"
+              placeholder="Brief description (Turkish characters will be converted)"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 outline-none"
             />
           </div>
               <br /><br />
